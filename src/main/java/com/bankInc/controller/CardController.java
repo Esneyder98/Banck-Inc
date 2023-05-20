@@ -18,15 +18,16 @@ public class CardController {
         this.cardServices = cardServices;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Card> getCard(@PathVariable("id") Long id){
+    @GetMapping("balance/{id}")
+    public ResponseEntity<?> getCard(@PathVariable("id") String id){
         try {
-            return cardServices.getFindByCardId(id)
+            Long cardId = Long.parseLong(id);
+            return cardServices.getFindByCardId(cardId)
                     .map(card->{
                         return new ResponseEntity<>(card,HttpStatus.OK);
                     }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
         }catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.bankInc.service;
 
+import com.bankInc.Dto.CardDto;
 import com.bankInc.entity.Card;
 import com.bankInc.repository.CardRepository;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class CardServices {
         this.cardRepository = cardRepository;
     }
 
-    public Optional<Card>getFindByCardId(Long cardId) {
-        return cardRepository.findById(cardId);
+    public Optional<CardDto>getFindByCardId(Long cardId) {
+        return cardRepository.getBycardNumber(cardId);
     }
 }

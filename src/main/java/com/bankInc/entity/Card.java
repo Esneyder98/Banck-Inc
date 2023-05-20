@@ -2,6 +2,7 @@ package com.bankInc.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name="cards")
+
 public class Card {
 
     @Id
@@ -38,6 +40,14 @@ public class Card {
     @ManyToOne
     @JoinColumn(name = "product_id", insertable = false, updatable = false)
     private Product product;
+
+    public Card() {
+    }
+    public Card(Long cardId, Long cardNumber, String holderName) {
+        this.cardId = cardId;
+        this.cardNumber = cardNumber;
+        this.holderName = holderName;
+    }
 
     public Long getCardId() {
         return cardId;
