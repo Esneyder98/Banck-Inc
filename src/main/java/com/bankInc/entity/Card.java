@@ -1,12 +1,14 @@
 package com.bankInc.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name="Cards")
+@Table(name="cards")
 public class Card {
 
     @Id
@@ -14,28 +16,113 @@ public class Card {
     @Column(name = "card_id")
     private Long cardId;
 
-    private String name;
-
     @Column(name = "card_Number")
-    private Integer cardNumber;
+    private Long cardNumber;
 
     @Column(name = "holder_name")
     private String holderName;
 
-    private String state;
+    private Boolean state;
 
     @Column(name = "expiration_date")
     private LocalDateTime expirationDate;
 
-    private Integer balance;
+    private BigDecimal balance;
 
     @Column(name = "product_id")
     private Long productId;
 
     @OneToMany(mappedBy="card")
     private List<Transaction> transactions;
-
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "product_id", insertable = false, updatable = false)
     private Product product;
+
+    public Long getCardId() {
+        return cardId;
+    }
+
+    public void setCardId(Long cardId) {
+        this.cardId = cardId;
+    }
+
+    public Long getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(Long cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public String getHolderName() {
+        return holderName;
+    }
+
+    public void setHolderName(String holderName) {
+        this.holderName = holderName;
+    }
+
+    public Boolean getState() {
+        return state;
+    }
+
+    public void setState(Boolean state) {
+        this.state = state;
+    }
+
+    public LocalDateTime getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(LocalDateTime expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "cardId=" + cardId +
+                ", cardNumber=" + cardNumber +
+                ", holderName='" + holderName + '\'' +
+                ", state=" + state +
+                ", expirationDate=" + expirationDate +
+                ", balance=" + balance +
+                ", productId=" + productId +
+                ", transactions=" + transactions +
+                ", product=" + product +
+                '}';
+    }
 }
