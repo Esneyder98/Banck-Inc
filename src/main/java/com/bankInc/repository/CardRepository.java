@@ -18,4 +18,6 @@ public interface CardRepository extends JpaRepository<Card,Long>, CrudRepository
             " FROM Card c " +
             " WHERE c.cardNumber =:card_number")
     Optional<CardDto> getBycardNumber(@Param("card_number") Long card_number);
+
+    Optional<Card>findByCardNumber(Long card_number);
 }

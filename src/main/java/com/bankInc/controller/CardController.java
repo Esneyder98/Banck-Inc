@@ -44,4 +44,16 @@ public class CardController {
         }
     }
 
+    @PostMapping("/endroll")
+    public ResponseEntity<?>activeCard(@RequestBody Card card){
+        try{
+            return cardServices.updateStateCard(card,true).map(
+                    cardResponse ->{
+                        return new ResponseEntity<>(cardResponse,HttpStatus.OK);
+                    }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        }catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

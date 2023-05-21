@@ -63,11 +63,21 @@ public class CardServices {
             card.setExpirationDate(this.getFutureDate());
             card.setBalance(BigDecimal.valueOf(0));
             card.setProductId(productId);
-            //Card card = new Card(number,false,this.getFutureDate(),BigDecimal.valueOf(0),productId);
             return saveCard.ofNullable(cardRepository.save(card));
         } else {
             return saveCard;
         }
+    }
+
+    public Optional<Card> updateStateCard (Card card,boolean state) {
+        Long cardNumber= card.getCardNumber();
+        return Optional.ofNullable(cardRepository.findByCardNumber(cardNumber)
+                .map(
+                        cardd -> {
+                            cardd.setState(state);
+                            return cardRepository.save(cardd);
+                        }
+                ).orElseThrow(() -> new RuntimeException("No se encontro la targeta a modificar " + cardNumber)));
     }
 }
 
