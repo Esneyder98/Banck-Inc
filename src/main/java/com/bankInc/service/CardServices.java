@@ -30,8 +30,8 @@ public class CardServices {
     }
 
 
-    public Optional<CardDto> getFindByCardId(Long cardId) {
-        return cardRepository.getBycardNumber(cardId);
+    public Optional<CardDto> getFindByCardNumber(Long cardNumber) {
+        return cardRepository.getBycardNumber(cardNumber);
     }
 
         public static long generarNumeroAleatorio() {
@@ -110,6 +110,7 @@ public class CardServices {
                         transaction.setCardId(cardd.getCardId());
                         transaction.setBalance(amount);
                         transaction.setTransactionType("RECARGA");
+                        transaction.setDate(LocalDateTime.now());
                         transactionServices.save(transaction);
                         return cardRepository.save(cardd);
                     }

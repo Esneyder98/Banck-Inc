@@ -23,8 +23,8 @@ public class CardController {
     @GetMapping("/balance/{id}")
     public ResponseEntity<?> getCard(@PathVariable("id") String id){
         try {
-            Long cardId = Long.parseLong(id);
-            return cardServices.getFindByCardId(cardId)
+            Long cardNumber = Long.parseLong(id);
+            return cardServices.getFindByCardNumber(cardNumber)
                     .map(card->{
                         return new ResponseEntity<>(card,HttpStatus.OK);
                     }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));

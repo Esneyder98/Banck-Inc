@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="transactions")
@@ -21,6 +22,8 @@ public class Transaction {
     @Column(name = "transactionType")
     private String transactionType;
 
+    private LocalDateTime date;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "card_id", insertable = false, updatable = false)
@@ -29,10 +32,11 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(Long cardId, BigDecimal balance, String transactionType) {
+    public Transaction(Long cardId, BigDecimal balance, String transactionType,LocalDateTime date) {
         this.cardId = cardId;
         this.balance = balance;
         this.transactionType = transactionType;
+        this.date = date;
     }
 
     public Long getTransactionId() {
@@ -73,6 +77,14 @@ public class Transaction {
 
     public void setCard(Card card) {
         this.card = card;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 
     @Override
