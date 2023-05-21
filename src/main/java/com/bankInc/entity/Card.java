@@ -49,6 +49,15 @@ public class Card {
         this.holderName = holderName;
     }
 
+    public Card(Long cardNumber, String holderName, Boolean state, LocalDateTime expirationDate, BigDecimal balance, Long productId) {
+        this.cardNumber = cardNumber;
+        this.holderName = holderName;
+        this.state = state;
+        this.expirationDate = expirationDate;
+        this.balance = balance;
+        this.productId = productId;
+    }
+
     public Long getCardId() {
         return cardId;
     }
