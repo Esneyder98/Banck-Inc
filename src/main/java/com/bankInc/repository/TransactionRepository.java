@@ -1,12 +1,11 @@
 package com.bankInc.repository;
 
-import com.bankInc.entity.Card;
-import com.bankInc.entity.Product;
+import com.bankInc.entity.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product,Long>, CrudRepository<Product,Long> {
+public interface TransactionRepository extends JpaRepository<Transaction,Long>, CrudRepository<Transaction,Long> {
 
 }

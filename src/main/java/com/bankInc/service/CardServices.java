@@ -3,8 +3,10 @@ package com.bankInc.service;
 import com.bankInc.Dto.CardDto;
 import com.bankInc.entity.Card;
 import com.bankInc.entity.Product;
+import com.bankInc.entity.Transaction;
 import com.bankInc.repository.CardRepository;
 import com.bankInc.repository.ProductRepository;
+import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,9 +21,12 @@ public class CardServices {
     private CardRepository cardRepository;
     private ProductRepository productRepository;
 
-    public CardServices(CardRepository cardRepository, ProductRepository productRepository) {
+    private TransactionServices transactionServices;
+
+    public CardServices(CardRepository cardRepository, ProductRepository productRepository,TransactionServices transactionServices) {
         this.cardRepository = cardRepository;
         this.productRepository = productRepository;
+        this.transactionServices = transactionServices;
     }
 
 
@@ -89,5 +94,29 @@ public class CardServices {
                         }
                 ).orElseThrow(() -> new RuntimeException("No se encontro la targeta a modificar " + cardNumber)));
     }
+
+    public Optional<Card> topUpBalance(Card card){
+        Long cardNumber= card.getCardNumber();
+        BigDecimal amount= card.getBalance();
+        Optional<Card> newTransaction = null;
+        return Optional.ofNullable(cardRepository.findByCardNumber(cardNumber).map(
+                cardd -> {
+                    if(cardd.getState()){
+                        BigDecimal preBalance = cardd.getBalance();
+                        BigDecimal sum = preBalance.add(amount);
+                        cardd.setBalance(sum);
+
+                        Transaction transaction = new Transaction();
+                        transaction.setCardId(cardd.getCardId());
+                        transaction.setBalance(amount);
+                        transaction.setTransactionType("RECARGA");
+                        transactionServices.save(transaction);
+                        return cardRepository.save(cardd);
+                    }
+                    return null;
+                }
+        ).orElseThrow(() -> new RuntimeException("Tarjeta Bloqueada")));
+    }
+
 }
 

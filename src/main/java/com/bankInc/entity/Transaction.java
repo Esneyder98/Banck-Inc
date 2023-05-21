@@ -1,5 +1,6 @@
 package com.bankInc.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -15,14 +16,24 @@ public class Transaction {
     @Column(name = "card_id")
     private  Long cardId;
 
-    private BigDecimal worth;
+    private BigDecimal balance;
 
     @Column(name = "transactionType")
     private String transactionType;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "card_id", insertable = false, updatable = false)
     private Card card;
+
+    public Transaction() {
+    }
+
+    public Transaction(Long cardId, BigDecimal balance, String transactionType) {
+        this.cardId = cardId;
+        this.balance = balance;
+        this.transactionType = transactionType;
+    }
 
     public Long getTransactionId() {
         return transactionId;
@@ -40,12 +51,12 @@ public class Transaction {
         this.cardId = cardId;
     }
 
-    public BigDecimal getWorth() {
-        return worth;
+    public BigDecimal getBalance() {
+        return balance;
     }
 
-    public void setWorth(BigDecimal worth) {
-        this.worth = worth;
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 
     public String getTransactionType() {
@@ -69,7 +80,7 @@ public class Transaction {
         return "Transaction{" +
                 "transactionId=" + transactionId +
                 ", cardId=" + cardId +
-                ", worth=" + worth +
+                ", balance=" + balance +
                 ", transactionType='" + transactionType + '\'' +
                 ", card=" + card +
                 '}';
