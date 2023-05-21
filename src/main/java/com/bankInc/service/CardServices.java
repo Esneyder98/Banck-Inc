@@ -79,5 +79,15 @@ public class CardServices {
                         }
                 ).orElseThrow(() -> new RuntimeException("No se encontro la targeta a modificar " + cardNumber)));
     }
+
+    public Optional<Card> updateStateCard(Long cardNumber,boolean state){
+        return Optional.ofNullable(cardRepository.findByCardNumber(cardNumber)
+                .map(
+                        cardd -> {
+                            cardd.setState(state);
+                            return cardRepository.save(cardd);
+                        }
+                ).orElseThrow(() -> new RuntimeException("No se encontro la targeta a modificar " + cardNumber)));
+    }
 }
 

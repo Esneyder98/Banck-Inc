@@ -55,5 +55,15 @@ public class CardController {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @DeleteMapping("/{cardNumber}")
+    public ResponseEntity<?>Blockcard(@PathVariable Long cardNumber){
+        try{
+            return cardServices.updateStateCard(cardNumber,false).map(
+                    cardResponse ->{
+                        return new ResponseEntity<>(cardResponse,HttpStatus.OK);
+                    }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        }catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
