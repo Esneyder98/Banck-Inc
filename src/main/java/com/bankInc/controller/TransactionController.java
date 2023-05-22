@@ -4,8 +4,11 @@ import com.bankInc.Dto.CardTransactionDto;
 import com.bankInc.entity.Card;
 import com.bankInc.entity.Transaction;
 import com.bankInc.service.TransactionServices;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +26,13 @@ public class TransactionController {
     }
 
     @PostMapping("/purchase")
-    public ResponseEntity<?> activeCard(@RequestBody Card card) {
+    @ApiOperation(value = "Registrar transacciones de compra")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "CREATED"),
+            @ApiResponse(code = 404, message = "TARJETA NOT_FOUND"),
+            @ApiResponse(code = 500,message = "INTERNAL SERVER ERROR")
+    })
+    public ResponseEntity<?> activeCard(@ApiParam(value = "Numero de tarjeta y valor a pagar",required = true)@RequestBody Card card) {
         HashMap<String,String> errorMap = new HashMap<String,String>();
         try {
             return transactionServices.savePurchase(card).map(
@@ -36,7 +45,13 @@ public class TransactionController {
         }
     }
     @GetMapping("/{transactionId}")
-    public ResponseEntity<?> getTransactionById(@PathVariable Long transactionId){
+    @ApiOperation(value = "Consultar transacciones de compra")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "OK"),
+            @ApiResponse(code = 404, message = "Transaction NOT_FOUND"),
+            @ApiResponse(code = 500,message = "INTERNAL SERVER ERROR")
+    })
+    public ResponseEntity<?> getTransactionById(@ApiParam(value = "Id de transaccion",required = true,example = "2")@PathVariable Long transactionId){
         HashMap<String,String> errorMap = new HashMap<String,String>();
         try {
             return transactionServices.getTransactionById(transactionId).map(
@@ -50,7 +65,13 @@ public class TransactionController {
     }
 
     @PostMapping("/anulation")
-    public ResponseEntity<?> purchaseAnulation(@RequestBody CardTransactionDto cardTransactionDto){
+    @ApiOperation(value = "Anular transacciones de compra menos de 24 horas")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "OK"),
+            @ApiResponse(code = 404, message = "Transaction NOT_FOUND"),
+            @ApiResponse(code = 500,message = "INTERNAL SERVER ERROR")
+    })
+    public ResponseEntity<?> purchaseAnulation(@ApiParam(value = "Número de tarjeta y id de transaccion")@RequestBody CardTransactionDto cardTransactionDto){
         HashMap<String,String> errorMap = new HashMap<String,String>();
         try{
             return transactionServices.purchaseAnulation(cardTransactionDto).map(

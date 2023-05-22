@@ -4,6 +4,10 @@ import com.bankInc.entity.Card;
 import com.bankInc.entity.Product;
 import com.bankInc.repository.ProductRepository;
 import com.bankInc.service.CardServices;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +25,13 @@ public class CardController {
     }
 
     @GetMapping("/balance/{id}")
-    public ResponseEntity<?> getCard(@PathVariable("id") String id){
+    @ApiOperation(value = "Consultar saldo de tarjeta")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Product not Found"),
+            @ApiResponse(code = 500,message = "INTERNAL SERVER ERROR")
+    })
+    public ResponseEntity<?> getCard(@ApiParam(value = "numero de tarjeta",required = true,example = "1020302340506759")@PathVariable("id") String id){
         try {
             Long cardNumber = Long.parseLong(id);
             return cardServices.getFindByCardNumber(cardNumber)
@@ -33,7 +43,13 @@ public class CardController {
         }
     }
     @GetMapping("/{productId}/number")
-    public ResponseEntity<?> generateCardNumber(@RequestBody Card card,@PathVariable Long productId){
+    @ApiOperation(value = "Generar numero de tarjeta")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "CREATED"),
+            @ApiResponse(code = 404, message = "TARJETA NOT_FOUND"),
+            @ApiResponse(code = 500,message = "INTERNAL SERVER ERROR")
+    })
+    public ResponseEntity<?> generateCardNumber(@ApiParam(value = "datos de la tarjeta a crear",required = true) @RequestBody Card card, @ApiParam(value = "Id del producto",required = true,example = "102030")@PathVariable Long productId){
         try {
             return cardServices.generateCardNumber(card,productId).map(cardd ->{
                         return new ResponseEntity<Card>(cardd, HttpStatus.CREATED);
@@ -45,7 +61,13 @@ public class CardController {
     }
 
     @PostMapping("/endroll")
-    public ResponseEntity<?>activeCard(@RequestBody Card card){
+    @ApiOperation(value = "Activar  tarjeta")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "TARJETA NOT_FOUND"),
+            @ApiResponse(code = 500,message = "INTERNAL SERVER ERROR")
+    })
+    public ResponseEntity<?>activeCard(@ApiParam(value="Numero de la tarjera a activar",required = true)@RequestBody Card card){
         try{
             return cardServices.updateStateCard(card,true).map(
                     cardResponse ->{
@@ -56,7 +78,13 @@ public class CardController {
         }
     }
     @DeleteMapping("/{cardNumber}")
-    public ResponseEntity<?>Blockcard(@PathVariable Long cardNumber){
+    @ApiOperation(value = "Bloquear  tarjeta")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "TARJETA NOT_FOUND"),
+            @ApiResponse(code = 500,message = "INTERNAL SERVER ERROR")
+    })
+    public ResponseEntity<?>Blockcard(@ApiParam(value = "Numero de tarjeta a bloquear",required = true,example = "1020302340506759") @PathVariable Long cardNumber){
         try{
             return cardServices.updateStateCard(cardNumber,false).map(
                     cardResponse ->{
@@ -67,7 +95,13 @@ public class CardController {
         }
     }
     @PostMapping("/balance")
-    public ResponseEntity<?>topUpBalance(@RequestBody Card card){
+    @ApiOperation(value = "Recargar saldo")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "TARJETA NOT_FOUND"),
+            @ApiResponse(code = 500,message = "INTERNAL SERVER ERROR")
+    })
+    public ResponseEntity<?>topUpBalance(@ApiParam(value = "numero de tarjeta y valor a recargar o balance",required = true)@RequestBody Card card){
         try {
             return cardServices.topUpBalance(card).map(cardBalance->{
                 return new ResponseEntity<>(cardBalance,HttpStatus.OK);

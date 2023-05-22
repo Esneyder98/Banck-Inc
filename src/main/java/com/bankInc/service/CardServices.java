@@ -31,7 +31,8 @@ public class CardServices {
 
 
     public Optional<CardDto> getFindByCardNumber(Long cardNumber) {
-        return cardRepository.getBycardNumber(cardNumber);
+        return Optional.ofNullable(cardRepository.getBycardNumber(cardNumber)
+                .orElseThrow(() -> new RuntimeException("Targeta no encontrada: " + cardNumber)));
     }
 
         public static long generarNumeroAleatorio() {
@@ -80,7 +81,7 @@ public class CardServices {
                             cardd.setState(state);
                             return cardRepository.save(cardd);
                         }
-                ).orElseThrow(() -> new RuntimeException("No se encontro la targeta a modificar " + cardNumber)));
+                ).orElseThrow(() -> new RuntimeException("No se encontro la tarjeta a modificar " + cardNumber)));
     }
 
     public Optional<Card> updateStateCard(Long cardNumber,boolean state){
@@ -90,7 +91,7 @@ public class CardServices {
                             cardd.setState(state);
                             return cardRepository.save(cardd);
                         }
-                ).orElseThrow(() -> new RuntimeException("No se encontro la targeta a modificar " + cardNumber)));
+                ).orElseThrow(() -> new RuntimeException("No se encontro la tarjeta a modificar " + cardNumber)));
     }
 
     public Optional<Card> topUpBalance(Card card){
