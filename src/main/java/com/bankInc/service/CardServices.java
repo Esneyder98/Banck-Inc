@@ -43,9 +43,7 @@ public class CardServices {
         public Long concatNumber(Long number1, Long number2) {
             String num1 = Long.toString(number1);
             String num2 = Long.toString(number2);
-
             String concat = num1 + num2;
-
             return Long.parseLong(concat);
         }
 

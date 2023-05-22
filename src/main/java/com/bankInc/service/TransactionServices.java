@@ -30,7 +30,7 @@ public class TransactionServices {
     }
 
     public Optional<Transaction> savePurchase(Card card) {
-        return cardRepository.findByCardNumber(card.getCardNumber()).map(
+        return Optional.ofNullable(cardRepository.findByCardNumber(card.getCardNumber()).map(
                 cardd -> {
                     BigDecimal result = cardd.getBalance().subtract(card.getBalance());
                     if (result.compareTo(BigDecimal.ZERO) > 0) {
@@ -42,9 +42,10 @@ public class TransactionServices {
                         cardd.setBalance(result);
                         cardRepository.save(cardd);
                         return transactionRepository.save(transactionSave);
+                    } else {
+                        throw new MiExcepcion("saldo Insuficiente");
                     }
-                    return null;
-                });
+                }).orElseThrow(() -> new RuntimeException("CarNumber No existe")));
     }
     public Optional<Transaction>getTransactionById(Long transactionId) {
         return transactionRepository.findById(transactionId);

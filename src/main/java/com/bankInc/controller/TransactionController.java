@@ -29,7 +29,7 @@ public class TransactionController {
             return transactionServices.savePurchase(card).map(
                     newTransaction -> {
                         return new ResponseEntity<>(newTransaction, HttpStatus.CREATED);
-                    }).orElseThrow(() -> new RuntimeException("saldo de insuficiente para compra o cardNumber no encontrada"));
+                    }).orElseThrow();
         } catch (Exception e) {
             errorMap.put("error", e.getMessage());
             return  new ResponseEntity<>(errorMap,HttpStatus.NOT_FOUND);
