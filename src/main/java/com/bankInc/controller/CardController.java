@@ -67,7 +67,7 @@ public class CardController {
             @ApiResponse(code = 404, message = "TARJETA NOT_FOUND"),
             @ApiResponse(code = 500,message = "INTERNAL SERVER ERROR")
     })
-    public ResponseEntity<?>activeCard(@ApiParam(value="Numero de la tarjera a activar",required = true)@RequestBody Card card){
+    public ResponseEntity<?>activeCard(@ApiParam(value="Numero de la tarjeta a activar",required = true)@RequestBody Card card){
         try{
             return cardServices.updateStateCard(card,true).map(
                     cardResponse ->{

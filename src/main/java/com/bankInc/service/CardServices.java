@@ -112,10 +112,11 @@ public class CardServices {
                         transaction.setDate(LocalDateTime.now());
                         transactionServices.save(transaction);
                         return cardRepository.save(cardd);
+                    }else{
+                        throw new MiExcepcion("Tarjeta Bloqueada");
                     }
-                    return null;
                 }
-        ).orElseThrow(() -> new RuntimeException("Tarjeta Bloqueada")));
+        ).orElseThrow(() -> new RuntimeException("Numero de tarjeta no existe")));
     }
 
 }
