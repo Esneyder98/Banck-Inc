@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +33,7 @@ public class CardController {
             @ApiResponse(code = 500,message = "INTERNAL SERVER ERROR")
     })
     public ResponseEntity<?> getCard(@ApiParam(value = "numero de tarjeta",required = true,example = "1020302340506759")@PathVariable("id") String id){
+        HashMap<String,String> errorMap = new HashMap<String,String>();
         try {
             Long cardNumber = Long.parseLong(id);
             return cardServices.getFindByCardNumber(cardNumber)
@@ -39,6 +41,7 @@ public class CardController {
                         return new ResponseEntity<>(card,HttpStatus.OK);
                     }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
         }catch(Exception e){
+            errorMap.put("error",e.getMessage());
             return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -50,13 +53,15 @@ public class CardController {
             @ApiResponse(code = 500,message = "INTERNAL SERVER ERROR")
     })
     public ResponseEntity<?> generateCardNumber(@ApiParam(value = "datos de la tarjeta a crear",required = true) @RequestBody Card card, @ApiParam(value = "Id del producto",required = true,example = "102030")@PathVariable Long productId){
+        HashMap<String,String> errorMap = new HashMap<String,String>();
         try {
             return cardServices.generateCardNumber(card,productId).map(cardd ->{
                         return new ResponseEntity<Card>(cardd, HttpStatus.CREATED);
                     }
             ).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
         }catch(Exception e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+            errorMap.put("error", e.getMessage());
+            return new ResponseEntity<>(errorMap,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -102,12 +107,14 @@ public class CardController {
             @ApiResponse(code = 500,message = "INTERNAL SERVER ERROR")
     })
     public ResponseEntity<?>topUpBalance(@ApiParam(value = "numero de tarjeta y valor a recargar o balance",required = true)@RequestBody Card card){
+        HashMap<String,String> errorMap = new HashMap<String,String>();
         try {
             return cardServices.topUpBalance(card).map(cardBalance->{
                 return new ResponseEntity<>(cardBalance,HttpStatus.OK);
             }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
         }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+            errorMap.put("error",e.getMessage());
+            return new ResponseEntity<>(errorMap,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

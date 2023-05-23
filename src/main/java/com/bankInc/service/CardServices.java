@@ -59,17 +59,23 @@ public class CardServices {
 
         number= productRepository.findById(productId).map(product -> {
             return this.concatNumber(product.getProductId(),this.generarNumeroAleatorio());
-        }).orElse(0L);
+        }).orElse(number=0L);
 
-        if(number != 0L) {
-            card.setCardNumber(number);
-            card.setState(false);
-            card.setExpirationDate(this.getFutureDate());
-            card.setBalance(BigDecimal.valueOf(0));
-            card.setProductId(productId);
-            return saveCard.ofNullable(cardRepository.save(card));
-        } else {
-            return saveCard;
+        // validacion nombre titular
+        String[] holderName = card.getHolderName().trim().split("\\s+");
+        if (holderName.length ==2) {
+            if (number != 0L) {
+                card.setCardNumber(number);
+                card.setState(false);
+                card.setExpirationDate(this.getFutureDate());
+                card.setBalance(BigDecimal.valueOf(0));
+                card.setProductId(productId);
+                return saveCard.ofNullable(cardRepository.save(card));
+            } else {
+                throw new MiExcepcion("El productId ingresado no existe");
+            }
+        }else {
+            throw new MiExcepcion("HolderName invalido; debe contener primerNombre y primer apellido");
         }
     }
 
