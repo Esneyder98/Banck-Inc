@@ -79,7 +79,7 @@ public class TransactionServices {
                                     }
 
                                 }
-                            }).orElseThrow(() -> new RuntimeException("Transaction no existe"));
+                            }).orElseThrow(() -> new RuntimeException("No existe transacción de compra con el trasactionId ingresado"));
                 }).orElseThrow(() -> new RuntimeException("CarNumber no existe")));
     }
 }
