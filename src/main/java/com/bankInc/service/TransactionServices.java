@@ -68,11 +68,16 @@ public class TransactionServices {
                                 if (horasDiferencia > 24) {
                                     throw new MiExcepcion("fecha de transaccion superior a 24 horas");
                                 } else {
-                                    BigDecimal sum = card.getBalance().add(transaction.getBalance());
-                                    card.setBalance(sum);
-                                    transaction.setTransactionType("Anulada");
-                                    cardRepository.save(card);
-                                    return transactionRepository.save(transaction);
+                                    if(transaction.getCardId() == card.getCardId()){
+                                        BigDecimal sum = card.getBalance().add(transaction.getBalance());
+                                        card.setBalance(sum);
+                                        transaction.setTransactionType("Anulada");
+                                        cardRepository.save(card);
+                                        return transactionRepository.save(transaction);
+                                    }else {
+                                        throw new MiExcepcion("La transacción no pertenece a la tarjeta ingresada");
+                                    }
+
                                 }
                             }).orElseThrow(() -> new RuntimeException("Transaction no existe"));
                 }).orElseThrow(() -> new RuntimeException("CarNumber no existe")));
