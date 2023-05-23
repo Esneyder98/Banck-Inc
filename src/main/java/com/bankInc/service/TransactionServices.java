@@ -32,18 +32,22 @@ public class TransactionServices {
     public Optional<Transaction> savePurchase(Card card) {
         return Optional.ofNullable(cardRepository.findByCardNumber(card.getCardNumber()).map(
                 cardd -> {
-                    BigDecimal result = cardd.getBalance().subtract(card.getBalance());
-                    if (result.compareTo(BigDecimal.ZERO) > 0) {
-                        Transaction transactionSave = new Transaction();
-                        transactionSave.setCardId(cardd.getCardId());
-                        transactionSave.setBalance(card.getBalance());
-                        transactionSave.setTransactionType("PURCHASE");
-                        transactionSave.setDate(LocalDateTime.now());
-                        cardd.setBalance(result);
-                        cardRepository.save(cardd);
-                        return transactionRepository.save(transactionSave);
-                    } else {
-                        throw new MiExcepcion("saldo Insuficiente");
+                    if(cardd.getState()){
+                        BigDecimal result = cardd.getBalance().subtract(card.getBalance());
+                        if (result.compareTo(BigDecimal.ZERO) > 0) {
+                            Transaction transactionSave = new Transaction();
+                            transactionSave.setCardId(cardd.getCardId());
+                            transactionSave.setBalance(card.getBalance());
+                            transactionSave.setTransactionType("PURCHASE");
+                            transactionSave.setDate(LocalDateTime.now());
+                            cardd.setBalance(result);
+                            cardRepository.save(cardd);
+                            return transactionRepository.save(transactionSave);
+                        } else {
+                            throw new MiExcepcion("saldo Insuficiente");
+                        }
+                    }else{
+                        throw new MiExcepcion("Tarjeta Bloqueada");
                     }
                 }).orElseThrow(() -> new RuntimeException("CarNumber No existe")));
     }

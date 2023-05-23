@@ -32,7 +32,7 @@ public class TransactionController {
             @ApiResponse(code = 404, message = "TARJETA NOT_FOUND"),
             @ApiResponse(code = 500,message = "INTERNAL SERVER ERROR")
     })
-    public ResponseEntity<?> activeCard(@ApiParam(value = "Numero de tarjeta y valor a pagar",required = true)@RequestBody Card card) {
+    public ResponseEntity<?> purchaseCard(@ApiParam(value = "Numero de tarjeta y valor a pagar",required = true)@RequestBody Card card) {
         HashMap<String,String> errorMap = new HashMap<String,String>();
         try {
             return transactionServices.savePurchase(card).map(
